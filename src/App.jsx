@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import CoinCard from './components/CoinCard';
 import LimitSelector from './components/LimitSelector';
+import FilterInput from './components/FilterInput';
 // import { Routes, Route } from 'react-router';
 // import Header from './components/Header';
 // import HomePage from './pages/home';
@@ -37,13 +38,22 @@ const App = () => {
     fetchCoins();
   }, [limit]);
 
+  const filteredCoins = coins.filter((coin) =>
+    coin.name.toLowerCase().includes(filter.toLowerCase()) ||
+    coin.symbol.toLowerCase().includes(filter.toLowerCase())
+  );
+
   return (<div>
     <h1>Crypto Dash</h1>
     {loading && <p>Loading...</p>}
     {error && <p>{error}</p>}
-    <LimitSelector limit={limit} setLimit={setLimit} />
+    <div className='top-controls'>
+      <FilterInput filter={filter} onFilterChange={setFilter} />
+      <LimitSelector limit={limit} setLimit={setLimit} />
+    </div>
+
     <div className="grid">
-      {coins.map((coin) => (
+      {filteredCoins.map((coin) => (
         <CoinCard key={coin.id} coin={coin} />
       ))}
     </div>
