@@ -1,13 +1,10 @@
 import { useState, useEffect } from 'react';
-import CoinCard from './components/CoinCard';
-import LimitSelector from './components/LimitSelector';
-import FilterInput from './components/FilterInput';
-// import { Routes, Route } from 'react-router';
-// import Header from './components/Header';
-// import HomePage from './pages/home';
-// import AboutPage from './pages/about';
-// import NotFoundPage from './pages/not-found';
-// import CoinDetailsPage from './pages/coin-details';
+import { Routes, Route } from 'react-router';
+import Header from './components/Header';
+import HomePage from './pages/Home';
+import AboutPage from './pages/About';
+// import NotFoundPage from './pages/NotFound';
+// import CoinDetailsPage from './pages/CoinDetails';
 const API_URL = import.meta.env.VITE_COINS_API_URL;
 
 const App = () => {
@@ -36,28 +33,35 @@ const App = () => {
     };
 
     fetchCoins();
-  }, [limit]);
+  }, [limit, sortBy]);
 
-  const filteredCoins = coins.filter((coin) =>
-    coin.name.toLowerCase().includes(filter.toLowerCase()) ||
-    coin.symbol.toLowerCase().includes(filter.toLowerCase())
-  );
+  return (
+    <>
+      <Header />
+      <Routes>
+        <Route
+          path='/'
+          element={
+            <HomePage
+              coins={coins}
+              filter={filter}
+              setFilter={setFilter}
+              limit={limit}
+              setLimit={setLimit}
+              sortBy={sortBy}
+              setSortBy={setSortBy}
+              loading={loading}
+              error={error}
+            />
+          }
+        />
+        <Route path='/about' element={<AboutPage />} />
+        {/* <Route path='/coin/:id' element={<CoinDetailsPage />} />
+        <Route path='*' element={<NotFoundPage />} /> */}
+      </Routes>
+    </>
 
-  return (<div>
-    <h1>Crypto Dash</h1>
-    {loading && <p>Loading...</p>}
-    {error && <p>{error}</p>}
-    <div className='top-controls'>
-      <FilterInput filter={filter} onFilterChange={setFilter} />
-      <LimitSelector limit={limit} setLimit={setLimit} />
-    </div>
-
-    <div className="grid">
-      {filteredCoins.map((coin) => (
-        <CoinCard key={coin.id} coin={coin} />
-      ))}
-    </div>
-  </div>);
+  )
 }
 
 export default App;
