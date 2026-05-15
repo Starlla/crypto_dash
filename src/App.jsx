@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import CoinCard from './components/CoinCard';
 // import { Routes, Route } from 'react-router';
 // import Header from './components/Header';
 // import HomePage from './pages/home';
@@ -39,21 +40,21 @@ const App = () => {
     <h1>Crypto Dash</h1>
     {loading && <p>Loading...</p>}
     {error && <p>{error}</p>}
+    <div className='controls'>
+      <label htmlFor="limit">Show:</label>
+      <select
+        id="limit"
+        value={limit}
+        onChange={(e) => setLimit(Number(e.target.value))}
+      >
+        <option value={10}>10</option>
+        <option value={20}>20</option>
+        <option value={50}>50</option>
+      </select>
+    </div>
     <div className="grid">
       {coins.map((coin) => (
-        <div key={coin.id} className="coin-card">
-          <div className="coin-header">
-            <img src={coin.image} alt={coin.name} className="coin-image" />
-            <div>
-              <h2>{coin.name}</h2>
-              <p className="symbol">{coin.symbol.toUpperCase()}</p>
-            </div>
-          </div>
-          <p>Price: ${coin.current_price.toLocaleString()}</p>
-          <p className={coin.price_change_percentage_24h >= 0 ? 'positive' : 'negative'}>
-            24h: {coin.price_change_percentage_24h.toFixed(2)}%
-          </p>
-        </div>
+        <CoinCard key={coin.id} coin={coin} />
       ))}
     </div>
   </div>);
